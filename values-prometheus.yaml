@@ -1,0 +1,54 @@
+extraScrapeConfigs: |
+  - job_name: redpanda
+    static_configs:
+      - targets:
+          - redpanda-0.redpanda.redpanda.svc.cluster.local.:9644
+          - redpanda-1.redpanda.redpanda.svc.cluster.local.:9644
+          - redpanda-2.redpanda.redpanda.svc.cluster.local.:9644
+    metrics_path: /public_metrics
+
+server:
+  nodeSelector:
+    utility: "true"
+  tolerations:
+  - effect: NoSchedule
+    key: utility
+    operator: Equal
+    value: "true"
+  # The following is required for prometheus to successfully start
+  # https://github.com/prometheus-community/helm-charts/issues/1162
+  securityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0
+
+prometheus-pushgateway:
+  enabled: false
+
+alertmanager:
+  nodeSelector:
+    utility: "true"
+  tolerations:
+  - effect: NoSchedule
+    key: utility
+    operator: Equal
+    value: "true"
+
+kube-state-metrics:
+  nodeSelector:
+    utility: "true"
+  tolerations:
+  - effect: NoSchedule
+    key: utility
+    operator: Equal
+    value: "true"
+
+prometheus-node-exporter:
+  nodeSelector:
+    utility: "true"
+  tolerations:
+  - effect: NoSchedule
+    key: utility
+    operator: Equal
+    value: "true"

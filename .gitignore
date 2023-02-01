@@ -1,0 +1,7 @@
+.terraform
+eks-config.yaml
+lb-config.yaml
+save
+terraform.tfstate
+terraform.tfstate.backup
+*.swp
