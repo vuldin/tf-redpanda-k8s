@@ -7,7 +7,8 @@ resource "aws_vpc" "redpanda" {
 
 resource "aws_subnet" "public" {
   count                = var.create_cluster ? length(var.public_subnet_cidrs) : 0
-  vpc_id               = aws_vpc.redpanda[count.index].id
+  #vpc_id               = aws_vpc.redpanda[count.index].id
+  vpc_id               = length(aws_vpc.redpanda) > 0 ? one(aws_vpc.redpanda).id : null
   availability_zone_id = element(var.zones, count.index)
   cidr_block           = var.public_subnet_cidrs[count.index]
   map_public_ip_on_launch = true
@@ -18,12 +19,14 @@ resource "aws_subnet" "public" {
     # We add this tag to enable discovering the subnet from Terraform code
     # that provisions Redpanda clusters, as another alternative.
     "redpanda.subnet.public" = 1,
-  }, data.aws_default_tags.current[count.index].tags)
+  #}, data.aws_default_tags.current[count.index].tags)
+  }, length(aws_vpc.redpanda) > 0 ? one(data.aws_default_tags.current).tags : null)
 }
 
 resource "aws_subnet" "private" {
   count                   = var.create_cluster ? length(var.private_subnet_cidrs) : 0
-  vpc_id                  = aws_vpc.redpanda[count.index].id
+  #vpc_id                  = aws_vpc.redpanda[count.index].id
+  vpc_id               = length(aws_vpc.redpanda) > 0 ? one(aws_vpc.redpanda).id : null
   availability_zone_id    = element(var.zones, count.index)
   cidr_block              = var.private_subnet_cidrs[count.index]
   map_public_ip_on_launch = false
@@ -33,7 +36,8 @@ resource "aws_subnet" "private" {
     # We add this tag to enable discovering the subnet from Terraform code
     # that provisions Redpanda clusters, as another alternative.
     "redpanda.subnet.private" = 1,
-  }, data.aws_default_tags.current[count.index].tags)
+  #}, data.aws_default_tags.current[count.index].tags)
+  }, length(aws_vpc.redpanda) > 0 ? one(data.aws_default_tags.current).tags : null)
 }
 
 # Creates a private gateway vpc endpoint for S3 traffic. So traffic to S3
@@ -101,7 +105,8 @@ resource "aws_route" "nat" {
   count                  = var.create_cluster ? length(aws_route_table.private) : 0
   route_table_id         = aws_route_table.private.*.id[count.index]
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.redpanda[count.index].id
+  #nat_gateway_id         = aws_nat_gateway.redpanda[count.index].id
+  nat_gateway_id         = length(aws_vpc.redpanda) > 0 ? one(aws_nat_gateway.redpanda).id : null
 }
 
 // Routes public subnets outbound internet traffic through the VPC internet gateway.

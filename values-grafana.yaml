@@ -2,13 +2,8 @@
 # https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 
 replicas: 1
-nodeSelector:
-  utility: "true"
-tolerations:
-- effect: NoSchedule
-  key: utility
-  operator: Equal
-  value: "true"
+nodeSelector: {}
+tolerations: []
 
 # Administrator credentials when not using an existing secret (see below)
 adminUser: redpanda

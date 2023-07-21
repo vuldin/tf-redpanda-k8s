@@ -11,7 +11,8 @@ resource "aws_route_table" "main" {
 // rules in AWS.
 resource "aws_route_table" "private" {
   count  = var.create_cluster ? length(var.private_subnet_cidrs) : 0
-  vpc_id = aws_vpc.redpanda[count.index].id
+  #vpc_id = aws_vpc.redpanda[count.index].id
+  vpc_id = length(aws_vpc.redpanda) > 0 ? one(aws_vpc.redpanda).id : null
 
   tags = {
     purpose = "private"
@@ -29,7 +30,8 @@ resource "aws_main_route_table_association" "vpc-main-route-table" {
 resource "aws_route_table_association" "public" {
   count          = var.create_cluster ? length(var.public_subnet_cidrs) : 0
   subnet_id      = aws_subnet.public.*.id[count.index]
-  route_table_id = aws_route_table.main[count.index].id
+  #route_table_id = aws_route_table.main[count.index].id
+  route_table_id = length(aws_vpc.redpanda) > 0 ? one(aws_route_table.main).id : null
 }
 
 // Associates private subnets to private routing tables. Remember, there is a

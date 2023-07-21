@@ -27,9 +27,9 @@ resource "kubernetes_namespace" "prometheus" {
     name = var.prometheus_namespace
   }
 
-  depends_on = [
-    helm_release.redpanda,
-  ]
+  #depends_on = [
+  #  helm_release.redpanda,
+  #]
 }
 
 resource "helm_release" "prometheus" {

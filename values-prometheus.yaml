@@ -8,13 +8,8 @@ extraScrapeConfigs: |
     metrics_path: /public_metrics
 
 server:
-  nodeSelector:
-    utility: "true"
-  tolerations:
-  - effect: NoSchedule
-    key: utility
-    operator: Equal
-    value: "true"
+  nodeSelector: {}
+  tolerations: []
   # The following is required for prometheus to successfully start
   # https://github.com/prometheus-community/helm-charts/issues/1162
   securityContext:
@@ -27,28 +22,13 @@ prometheus-pushgateway:
   enabled: false
 
 alertmanager:
-  nodeSelector:
-    utility: "true"
-  tolerations:
-  - effect: NoSchedule
-    key: utility
-    operator: Equal
-    value: "true"
+  nodeSelector: {}
+  tolerations: []
 
 kube-state-metrics:
-  nodeSelector:
-    utility: "true"
-  tolerations:
-  - effect: NoSchedule
-    key: utility
-    operator: Equal
-    value: "true"
+  nodeSelector: {}
+  tolerations: []
 
 prometheus-node-exporter:
-  nodeSelector:
-    utility: "true"
-  tolerations:
-  - effect: NoSchedule
-    key: utility
-    operator: Equal
-    value: "true"
+  nodeSelector: {}
+  tolerations: []
